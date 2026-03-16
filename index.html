@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>당진정보고 학과 진로탐색</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════
+   RESET & BASE
+════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Noto Sans KR', sans-serif; background: #0F172A; color: #fff; min-height: 100vh; }
+button { font-family: inherit; cursor: pointer; }
+ul { list-style: none; }
+
+/* ════════════════════════════════
+   CSS 변수
+════════════════════════════════ */
+:root {
+  --red:    #DC2626; --red-light: #FCA5A5; --red-dark: #7F1D1D;
+  --blue:   #2563EB; --blue-light: #60A5FA; --blue-dark: #1e3a8a;
+  --yellow: #CA8A04; --yellow-light: #FDE047; --yellow-dark: #713F12;
+  --surface: rgba(255,255,255,0.03);
+  --border:  rgba(255,255,255,0.07);
+  --muted:   #64748B;
+  --sub:     #94A3B8;
+}
+
+/* ════════════════════════════════
+   LAYOUT
+════════════════════════════════ */
+.container { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+.section { display: none; }
+.section.active { display: block; }
+
+/* ════════════════════════════════
+   NAV
+════════════════════════════════ */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(15,23,42,0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1120px; margin: 0 auto; padding: 0 32px;
+  height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.nav-logo { font-weight: 900; font-size: 16px; white-space: nowrap; }
+.nav-links { display: flex; gap: 4px; }
+.nav-btn {
+  background: transparent; border: none; color: var(--muted);
+  padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600;
+  transition: all 0.2s; white-space: nowrap;
+}
+.nav-btn:hover { color: #fff; background: rgba(255,255,255,0.07); }
+.nav-btn.active { background: rgba(255,255,255,0.12); color: #fff; }
+
+/* 햄버거 */
+.hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 8px; }
+.hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: all 0.3s; }
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* 모바일 드로어 */
+.drawer {
+  display: none; position: fixed; inset: 64px 0 0 0;
+  background: rgba(10,18,36,0.98); z-index: 99; backdrop-filter: blur(20px);
+  flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+}
+.drawer.open { display: flex; }
+.drawer-btn {
+  background: transparent; border: none; color: var(--sub);
+  padding: 16px 48px; font-size: 20px; font-weight: 700; border-radius: 14px;
+  transition: all 0.2s; width: 260px; text-align: center;
+}
+.drawer-btn:hover, .drawer-btn.active { background: rgba(255,255,255,0.09); color: #fff; }
+
+/* ════════════════════════════════
+   HOME / HERO
+════════════════════════════════ */
+.hero {
+  min-height: calc(100vh - 64px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 80px 32px 60px;
+  background: radial-gradient(ellipse 70% 60% at 50% -5%, #1e3a8a 0%, #0F172A 65%);
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle 700px at 15% 85%, rgba(220,38,38,.05), transparent 55%),
+              radial-gradient(circle 500px at 85% 15%, rgba(202,138,4,.05), transparent 55%);
+}
+.hero-badge {
+  display: inline-flex; align-items: center;
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 100px; padding: 8px 22px; font-size: 13px; color: var(--sub); margin-bottom: 36px;
+}
+.hero-title {
+  font-size: clamp(38px, 5.5vw, 76px); font-weight: 900; line-height: 1.1;
+  margin-bottom: 22px; letter-spacing: -0.025em;
+}
+.hero-title em { font-style: normal; color: var(--blue-light); }
+.hero-sub { color: var(--sub); font-size: clamp(14px, 1.5vw, 17px); line-height: 1.9; margin-bottom: 48px; max-width: 520px; }
+.hero-cta { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-bottom: 80px; }
+
+.btn-primary {
+  background: var(--blue); color: #fff; border: none;
+  padding: 16px 40px; border-radius: 14px; font-size: 15px; font-weight: 700;
+  box-shadow: 0 0 48px rgba(37,99,235,.5); transition: all 0.25s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 48px rgba(37,99,235,.6); }
+.btn-ghost {
+  background: rgba(255,255,255,0.07); color: var(--sub);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 16px 40px; border-radius: 14px; font-size: 15px; font-weight: 600; transition: all 0.25s;
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+.dept-cards-home { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; }
+.dept-card-home {
+  flex: 1; min-width: 180px; max-width: 240px;
+  border-radius: 22px; padding: 28px 24px;
+  cursor: pointer; transition: transform 0.25s, box-shadow 0.25s; text-align: left;
+}
+.dept-card-home:hover { transform: translateY(-8px); }
+.dch-emoji { font-size: 32px; margin-bottom: 12px; }
+.dch-name { font-weight: 800; font-size: 15px; margin-bottom: 6px; }
+.dch-desc { color: var(--sub); font-size: 12px; }
+
+/* ════════════════════════════════
+   PAGE SHELL
+════════════════════════════════ */
+.page { padding: 80px 0 120px; }
+.page-header { margin-bottom: 52px; }
+.page-label { font-size: 11px; color: var(--muted); font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 14px; }
+.page-title { font-size: clamp(28px, 3.5vw, 46px); font-weight: 900; margin-bottom: 16px; letter-spacing: -0.02em; }
+.page-sub { color: var(--sub); font-size: 16px; line-height: 1.8; max-width: 560px; }
+
+/* ════════════════════════════════
+   학과비교
+════════════════════════════════ */
+.three-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+.dept-big { border-radius: 24px; padding: 40px 30px; position: relative; overflow: hidden; }
+.dept-big::after {
+  content: ''; position: absolute; bottom: -40px; right: -40px;
+  width: 140px; height: 140px; border-radius: 50%;
+  background: rgba(255,255,255,0.04); pointer-events: none;
+}
+.db-emoji { font-size: 40px; margin-bottom: 16px; }
+.db-name { font-weight: 900; font-size: 22px; margin-bottom: 10px; }
+.db-tagline { font-size: 13px; opacity: 0.75; margin-bottom: 18px; line-height: 1.6; }
+.db-target {
+  display: inline-block; background: rgba(255,255,255,0.16);
+  border-radius: 8px; padding: 6px 14px; font-size: 12px; font-weight: 600; margin-bottom: 26px;
+}
+.db-years { display: flex; flex-direction: column; gap: 13px; }
+.db-year { display: flex; gap: 12px; align-items: flex-start; }
+.db-yr-pill {
+  flex-shrink: 0; width: 48px; height: 36px; border-radius: 10px;
+  background: rgba(255,255,255,0.16); display: flex;
+  align-items: center; justify-content: center; font-size: 10px; font-weight: 800;
+}
+.db-yr-tit { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.db-yr-sub { font-size: 11px; opacity: 0.65; line-height: 1.5; }
+
+.common-strip {
+  margin-top: 26px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 22px; padding: 30px 36px;
+  display: flex; align-items: flex-start; gap: 24px; flex-wrap: wrap;
+}
+.cs-title { font-weight: 800; font-size: 15px; white-space: nowrap; padding-top: 2px; }
+.cs-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+.cs-tag {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px; padding: 6px 14px; font-size: 12px; color: var(--sub);
+}
+.center { display: flex; justify-content: center; margin-top: 52px; }
+
+/* ════════════════════════════════
+   퀴즈
+════════════════════════════════ */
+.quiz-shell { max-width: 720px; margin: 0 auto; text-align: center; }
+.prog-track {
+  width: 100%; height: 5px; background: rgba(255,255,255,0.08);
+  border-radius: 100px; margin-bottom: 56px; overflow: hidden;
+}
+.prog-fill {
+  height: 100%; border-radius: 100px;
+  background: linear-gradient(90deg, var(--red), var(--blue), var(--yellow));
+  transition: width 0.5s cubic-bezier(.4,0,.2,1);
+}
+.q-counter { color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 22px; }
+.q-text { font-size: clamp(20px, 3vw, 28px); font-weight: 800; line-height: 1.5; margin-bottom: 40px; white-space: pre-line; }
+.q-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.q-opt {
+  background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.09);
+  border-radius: 20px; padding: 24px 20px; text-align: left; color: #fff;
+  transition: all 0.22s; cursor: pointer;
+}
+.q-opt:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.2); transform: translateY(-4px); }
+.q-opt-icon { font-size: 28px; margin-bottom: 12px; }
+.q-opt-text { font-size: 14px; font-weight: 500; line-height: 1.5; }
+
+.result-box {
+  border-radius: 26px; padding: 60px 48px; max-width: 560px; margin: 0 auto;
+}
+.res-emoji { font-size: 68px; margin-bottom: 18px; }
+.res-kicker { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; opacity: 0.7; margin-bottom: 10px; }
+.res-name { font-weight: 900; font-size: 32px; margin-bottom: 18px; letter-spacing: -0.02em; }
+.res-desc { font-size: 15px; line-height: 1.9; opacity: 0.88; margin-bottom: 30px; }
+.res-jobs { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 32px; }
+.res-job { background: rgba(255,255,255,0.18); border-radius: 100px; padding: 7px 18px; font-size: 13px; font-weight: 600; }
+.res-acts { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn-out {
+  background: rgba(255,255,255,0.14); color: #fff; border: 1px solid rgba(255,255,255,0.3);
+  padding: 13px 30px; border-radius: 10px; font-size: 14px; font-weight: 600; transition: all 0.2s;
+}
+.btn-out:hover { background: rgba(255,255,255,0.22); }
+.btn-fill {
+  background: rgba(255,255,255,0.26); color: #fff; border: none;
+  padding: 13px 30px; border-radius: 10px; font-size: 14px; font-weight: 700; transition: all 0.2s;
+}
+.btn-fill:hover { background: rgba(255,255,255,0.34); }
+
+/* ════════════════════════════════
+   교육과정
+════════════════════════════════ */
+.tab-row {
+  display: flex; gap: 6px; margin-bottom: 40px;
+  background: rgba(255,255,255,0.05); border-radius: 14px;
+  padding: 6px; width: fit-content;
+}
+.tab-b {
+  padding: 11px 24px; border-radius: 10px; border: none; color: var(--muted);
+  font-size: 14px; font-weight: 700; transition: all 0.25s; background: transparent; white-space: nowrap;
+}
+.tab-b.on-acc  { background: var(--red);    color: #fff; box-shadow: 0 4px 24px rgba(220,38,38,.45); }
+.tab-b.on-biz  { background: var(--blue);   color: #fff; box-shadow: 0 4px 24px rgba(37,99,235,.45); }
+.tab-b.on-cont { background: var(--yellow); color: #fff; box-shadow: 0 4px 24px rgba(202,138,4,.45); }
+.tab-panel { display: none; }
+.tab-panel.on { display: block; }
+
+.yr-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+.yr-card { border-radius: 22px; padding: 30px 24px; position: relative; overflow: hidden; }
+.yr-ghost { position: absolute; top: 8px; right: 14px; font-size: 56px; font-weight: 900; opacity: 0.055; line-height: 1; user-select: none; }
+.yr-lbl { font-size: 10px; color: var(--muted); font-weight: 700; letter-spacing: 0.12em; margin-bottom: 10px; }
+.yr-tit { font-weight: 800; font-size: 14px; margin-bottom: 16px; line-height: 1.45; }
+.yr-list { display: flex; flex-direction: column; gap: 7px; }
+.yr-li { font-size: 12px; padding-left: 14px; position: relative; line-height: 1.5; color: var(--sub); }
+.yr-li::before { content: '·'; position: absolute; left: 4px; }
+.yr-li.hi { font-weight: 600; }
+.yr-note { margin-top: 14px; font-size: 11px; color: #3a5170; line-height: 1.6; }
+
+.course-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+.course-box { border-radius: 16px; padding: 24px 22px; }
+.co-title { font-weight: 800; font-size: 14px; margin-bottom: 8px; }
+.co-desc { font-size: 12px; color: var(--sub); margin-bottom: 14px; line-height: 1.6; }
+.chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip { border-radius: 8px; padding: 5px 12px; font-size: 11px; font-weight: 600; }
+
+/* ════════════════════════════════
+   진로
+════════════════════════════════ */
+.career-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+.career-col {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 24px; padding: 30px 26px;
+}
+.car-head { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+.car-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.car-name { font-weight: 800; font-size: 16px; }
+.car-list { display: flex; flex-direction: column; gap: 11px; }
+.car-item {
+  display: flex; gap: 13px; align-items: flex-start;
+  background: rgba(255,255,255,0.03); border-radius: 14px;
+  padding: 15px 17px; border: 1px solid rgba(255,255,255,0.05);
+}
+.car-icon { font-size: 24px; flex-shrink: 0; }
+.car-n { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.car-d { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+.tools-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 30px; }
+.tool-box { border-radius: 16px; padding: 24px 22px; }
+.tool-name { font-weight: 700; font-size: 14px; margin-bottom: 14px; }
+
+/* ── 상담 버튼 특별 스타일 ── */
+.nav-consult {
+  color: #7DD3FC !important;
+  border: 1px solid rgba(125,211,252,0.3);
+  border-radius: 8px;
+  margin-left: 6px;
+}
+.nav-consult:hover { background: rgba(125,211,252,0.1) !important; color: #fff !important; }
+.drawer-consult { color: #7DD3FC !important; border: 1px solid rgba(125,211,252,0.25); }
+
+/* ── 팝업 오버레이 ── */
+.popup-overlay {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  background: rgba(5,12,28,0.85); backdrop-filter: blur(8px);
+  align-items: center; justify-content: center; padding: 20px;
+}
+.popup-overlay.open { display: flex; }
+.popup-box {
+  background: #0F1E38; border: 1px solid rgba(125,211,252,0.2);
+  border-radius: 24px; padding: 40px 36px;
+  width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(125,211,252,0.08);
+  position: relative;
+}
+.popup-close {
+  position: absolute; top: 18px; right: 20px;
+  background: rgba(255,255,255,0.07); border: none; color: var(--sub);
+  width: 32px; height: 32px; border-radius: 50%; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.popup-close:hover { background: rgba(255,255,255,0.15); color: #fff; }
+.popup-title { font-weight: 900; font-size: 22px; margin-bottom: 6px; }
+.popup-sub { color: var(--sub); font-size: 13px; margin-bottom: 28px; line-height: 1.6; }
+.form-group { margin-bottom: 18px; }
+.form-label { display: block; font-size: 12px; font-weight: 700; color: var(--sub); margin-bottom: 8px; letter-spacing: 0.05em; }
+.form-label span { color: #7DD3FC; margin-left: 2px; }
+.form-input, .form-select, .form-textarea {
+  width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px; padding: 13px 16px; color: #fff; font-family: inherit; font-size: 14px;
+  transition: border-color 0.2s; outline: none; appearance: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: rgba(125,211,252,0.5); background: rgba(255,255,255,0.07);
+}
+.form-input::placeholder, .form-textarea::placeholder { color: #3D5269; }
+.form-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748B' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; cursor: pointer; }
+.form-select option { background: #0F1E38; color: #fff; }
+.form-textarea { resize: vertical; min-height: 110px; line-height: 1.6; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.btn-submit {
+  width: 100%; background: linear-gradient(90deg, #2563EB, #0EA5E9);
+  color: #fff; border: none; padding: 15px; border-radius: 12px;
+  font-size: 15px; font-weight: 700; margin-top: 8px;
+  box-shadow: 0 0 32px rgba(37,99,235,.4); transition: all 0.25s;
+}
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(37,99,235,.55); }
+.btn-submit:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
+.submit-msg { text-align: center; padding: 20px 0 4px; font-size: 14px; color: #7DD3FC; display: none; }
+.submit-msg.err { color: #FCA5A5; }
+
+@media (max-width: 560px) {
+  .popup-box { padding: 32px 22px; }
+  .form-row { grid-template-columns: 1fr; }
+}
+footer {
+  text-align: center; padding: 44px 24px;
+  border-top: 1px solid var(--border);
+  color: #2D3F52; font-size: 13px; letter-spacing: 0.01em;
+}
+
+/* ════════════════════════════════
+   RESPONSIVE — 태블릿 ≤ 960px
+════════════════════════════════ */
+@media (max-width: 960px) {
+  .container { padding: 0 20px; }
+  .three-grid, .yr-grid, .career-grid, .tools-grid { grid-template-columns: 1fr 1fr; }
+  .course-pair { grid-template-columns: 1fr 1fr; }
+  .tab-row { width: 100%; }
+  .tab-b { flex: 1; text-align: center; font-size: 12px; padding: 10px 10px; }
+  .dept-cards-home { gap: 14px; }
+  .dept-card-home { min-width: 160px; }
+}
+
+/* ════════════════════════════════
+   RESPONSIVE — 작은 태블릿 ≤ 720px
+════════════════════════════════ */
+@media (max-width: 720px) {
+  .three-grid, .yr-grid, .career-grid, .tools-grid { grid-template-columns: 1fr; }
+  .course-pair { grid-template-columns: 1fr; }
+  .common-strip { flex-direction: column; gap: 14px; }
+}
+
+/* ════════════════════════════════
+   RESPONSIVE — 모바일 ≤ 560px
+════════════════════════════════ */
+@media (max-width: 560px) {
+  /* Nav */
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .nav-inner { padding: 0 16px; }
+  .nav-logo { font-size: 14px; }
+
+  /* Hero */
+  .hero { padding: 60px 20px 50px; min-height: calc(100svh - 64px); }
+  .hero-cta { flex-direction: column; align-items: center; }
+  .btn-primary, .btn-ghost { width: 100%; max-width: 320px; justify-content: center; }
+  .dept-cards-home { flex-direction: column; align-items: center; }
+  .dept-card-home { width: 100%; max-width: 340px; min-width: unset; }
+
+  /* Quiz */
+  .q-opts { grid-template-columns: 1fr; }
+  .result-box { padding: 40px 24px; }
+  .res-acts { flex-direction: column; align-items: center; }
+  .btn-out, .btn-fill { width: 100%; max-width: 280px; text-align: center; }
+
+  /* General */
+  .page { padding: 52px 0 80px; }
+  .container { padding: 0 16px; }
+  .page-header { margin-bottom: 36px; }
+  .center { margin-top: 36px; }
+}
+
+/* ════════════════════════════════
+   PC 강화 ≥ 1200px
+════════════════════════════════ */
+@media (min-width: 1200px) {
+  .dept-big { padding: 44px 36px; }
+  .yr-card { padding: 34px 28px; }
+  .career-col { padding: 36px 30px; }
+  .result-box { padding: 72px 60px; }
+  .hero-title { font-size: 80px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ 상담 및 문의 팝업 ══ -->
+<div class="popup-overlay" id="consult-popup" onclick="closeConsultOutside(event)">
+  <div class="popup-box">
+    <button class="popup-close" onclick="closeConsult()">✕</button>
+    <div class="popup-title">💬 상담 및 문의</div>
+    <p class="popup-sub">궁금한 점을 남겨주시면 담당 선생님이 직접 답변드려요.<br>제출하신 내용은 안전하게 기록됩니다.</p>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">학번 <span style="color:var(--muted);font-weight:400">(선택)</span></label>
+        <input class="form-input" id="f-id" type="text" placeholder="예) 1101 = 1학년 1반 1번" maxlength="20">
+      </div>
+      <div class="form-group">
+        <label class="form-label">성명 <span>*</span></label>
+        <input class="form-input" id="f-name" type="text" placeholder="이름을 입력해 주세요" maxlength="20">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">관계 <span>*</span></label>
+      <select class="form-select" id="f-role">
+        <option value="">선택해 주세요</option>
+        <option>학생 본인</option>
+        <option>보호자</option>
+        <option>선생님</option>
+        <option>기타</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">관심 학과</label>
+      <select class="form-select" id="f-dept">
+        <option value="">선택해 주세요 (선택사항)</option>
+        <option>회계사무과</option>
+        <option>AI융합경영과</option>
+        <option>AI콘텐츠과</option>
+        <option>아직 미정</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">문의 내용 <span>*</span></label>
+      <textarea class="form-textarea" id="f-msg" placeholder="궁금하신 내용을 자유롭게 적어주세요."></textarea>
+    </div>
+    <button class="btn-submit" id="f-submit" onclick="submitForm()">✉️ 문의 제출하기</button>
+    <div class="submit-msg" id="f-result"></div>
+  </div>
+</div>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo">🏫 당진정보고등학교</span>
+    <div class="nav-links">
+      <button class="nav-btn active" onclick="go('home',0)">홈</button>
+      <button class="nav-btn"        onclick="go('compare',1)">학과비교</button>
+      <button class="nav-btn"        onclick="go('quiz',2)">적성테스트</button>
+      <button class="nav-btn"        onclick="go('curriculum',3)">교육과정</button>
+      <button class="nav-btn"        onclick="go('career',4)">진로</button>
+      <button class="nav-btn nav-consult" onclick="openConsult()">💬 상담 및 문의</button>
+    </div>
+    <button class="hamburger" id="ham" onclick="toggleMenu()" aria-label="메뉴 열기">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- 모바일 드로어 -->
+<div class="drawer" id="drawer">
+  <button class="drawer-btn active" onclick="go('home',0);closeMenu()">🏠 홈</button>
+  <button class="drawer-btn"        onclick="go('compare',1);closeMenu()">📊 학과비교</button>
+  <button class="drawer-btn"        onclick="go('quiz',2);closeMenu()">✨ 적성테스트</button>
+  <button class="drawer-btn"        onclick="go('curriculum',3);closeMenu()">📚 교육과정</button>
+  <button class="drawer-btn"        onclick="go('career',4);closeMenu()">🎯 진로</button>
+  <button class="drawer-btn drawer-consult" onclick="openConsult();closeMenu()">💬 상담 및 문의</button>
+</div>
+
+<!-- ══════════════ 홈 ══════════════ -->
+<div id="home" class="section active">
+  <div class="hero">
+    <div class="hero-badge">✨ 2026학년도 신설학과 안내</div>
+    <h1 class="hero-title">나는 어떤 <em>AI</em> 인재가<br>될 수 있을까?</h1>
+    <p class="hero-sub">회계사무과·AI융합경영과·AI콘텐츠과,<br>세 학과의 특성을 알아보고 나에게 딱 맞는 진로를 찾아봐요.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="go('quiz',2)">✨ 나의 적성 찾기</button>
+      <button class="btn-ghost"   onclick="go('compare',1)">학과 비교 보기</button>
+    </div>
+    <div class="dept-cards-home">
+      <div class="dept-card-home" onclick="go('compare',1)" style="background:linear-gradient(135deg,rgba(220,38,38,.18),rgba(220,38,38,.35));border:1px solid rgba(220,38,38,.45)">
+        <div class="dch-emoji">📒</div><div class="dch-name">회계사무과</div><div class="dch-desc">회계·세무·경영지원</div>
+      </div>
+      <div class="dept-card-home" onclick="go('compare',1)" style="background:linear-gradient(135deg,rgba(37,99,235,.18),rgba(37,99,235,.35));border:1px solid rgba(37,99,235,.45)">
+        <div class="dch-emoji">💼</div><div class="dch-name">AI융합경영과</div><div class="dch-desc">데이터·경영·AI 융합</div>
+      </div>
+      <div class="dept-card-home" onclick="go('compare',1)" style="background:linear-gradient(135deg,rgba(202,138,4,.18),rgba(202,138,4,.35));border:1px solid rgba(202,138,4,.45)">
+        <div class="dch-emoji">🎨</div><div class="dch-name">AI콘텐츠과</div><div class="dch-desc">창작·디자인·마케팅</div>
+      </div>
+    </div>
+  </div>
+  <footer>당진정보고등학교 | 충청남도 당진시 | 2026학년도 신설학과 안내 자료</footer>
+</div>
+
+<!-- ══════════════ 학과비교 ══════════════ -->
+<div id="compare" class="section">
+  <div class="page"><div class="container">
+    <div class="page-header">
+      <div class="page-label">Three Departments</div>
+      <h2 class="page-title">세 학과, 무엇이 다를까?</h2>
+      <p class="page-sub">같은 기반에서 출발하지만, 2학년부터 뚜렷하게 달라져요.</p>
+    </div>
+    <div class="three-grid">
+      <!-- 회계 -->
+      <div class="dept-big" style="background:linear-gradient(145deg,var(--red-dark),var(--red));box-shadow:0 28px 72px rgba(220,38,38,.28)">
+        <div class="db-emoji">📒</div><div class="db-name">회계사무과</div>
+        <div class="db-tagline">회계·세무·경영지원 전문 인재 양성</div>
+        <div class="db-target">🎯 회계사무원 / 경영지원사무원</div>
+        <div class="db-years">
+          <div class="db-year"><div class="db-yr-pill">1학년</div><div><div class="db-yr-tit">경영·회계 기초</div><div class="db-yr-sub">회계원리, 상업경제, 사무관리, 성공적인 직업생활</div></div></div>
+          <div class="db-year"><div class="db-yr-pill">2학년</div><div><div class="db-yr-tit">회계·경영 실무 집중</div><div class="db-yr-sub">회계정보처리시스템, 기업자원통합관리, 금융일반, 회계실무, 비서, 인사 등</div></div></div>
+          <div class="db-year"><div class="db-yr-pill">3학년</div><div><div class="db-yr-tit">코스별 전공 심화</div><div class="db-yr-sub">회계사무원: 세무일반·세무실무·예산자금 / 경영지원: 노무관리·전자상거래·마케팅</div></div></div>
+        </div>
+      </div>
+      <!-- AI경영 -->
+      <div class="dept-big" style="background:linear-gradient(145deg,var(--blue-dark),var(--blue));box-shadow:0 28px 72px rgba(37,99,235,.28)">
+        <div class="db-emoji">💼</div><div class="db-name">AI융합경영과</div>
+        <div class="db-tagline">데이터로 기업을 움직이는 경영기획 전문가 양성</div>
+        <div class="db-target">🎯 경영기획사무원</div>
+        <div class="db-years">
+          <div class="db-year"><div class="db-yr-pill">1학년</div><div><div class="db-yr-tit">경영·회계 기초</div><div class="db-yr-sub">회계원리, 상업경제, 사무관리, 성공적인 직업생활</div></div></div>
+          <div class="db-year"><div class="db-yr-pill">2학년</div><div><div class="db-yr-tit">AI·데이터 역량</div><div class="db-yr-sub">컴퓨터시스템일반, 인공지능일반, 프로그래밍(파이썬), 회계정보처리시스템, 금융일반</div></div></div>
+          <div class="db-year"><div class="db-yr-pill">3학년</div><div><div class="db-yr-tit">빅데이터·실무 프로젝트</div><div class="db-yr-sub">빅데이터분석·시각화, 회계실무, 총무, 고객관리, 사무행정, 마케팅과광고, 프로젝트실습</div></div></div>
+        </div>
+      </div>
+      <!-- AI콘텐츠 -->
+      <div class="dept-big" style="background:linear-gradient(145deg,var(--yellow-dark),var(--yellow));box-shadow:0 28px 72px rgba(202,138,4,.28)">
+        <div class="db-emoji">🎨</div><div class="db-name">AI콘텐츠과</div>
+        <div class="db-tagline">AI로 콘텐츠를 만드는 디지털 크리에이터 양성</div>
+        <div class="db-target">🎯 광고·홍보·마케팅 전문가</div>
+        <div class="db-years">
+          <div class="db-year"><div class="db-yr-pill">1학년</div><div><div class="db-yr-tit">경영·콘텐츠 기초</div><div class="db-yr-sub">회계원리, 상업경제, 사무관리, 성공적인 직업생활</div></div></div>
+          <div class="db-year"><div class="db-yr-pill">2학년</div><div><div class="db-yr-tit">콘텐츠 심화 + 코스 분기</div><div class="db-yr-sub">컴퓨터그래픽, 문화콘텐츠산업일반, 마케팅과광고, 전자상거래일반 + 코스별 전공</div></div></div>
+          <div class="db-year"><div class="db-yr-pill">3학년</div><div><div class="db-yr-tit">AI 콘텐츠 실전 제작</div><div class="db-yr-sub">프롬프트디자인, 광고콘텐츠제작, 캐릭터제작, 사무행정 + 코스별 프로젝트실습</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="common-strip">
+      <div class="cs-title">🤝 세 학과 공통점</div>
+      <div class="cs-tags">
+        <span class="cs-tag">1학년 공통과정 운영</span><span class="cs-tag">AI 도구 실습</span>
+        <span class="cs-tag">총 이수학점 192학점</span><span class="cs-tag">취업·진학 모두 가능</span>
+        <span class="cs-tag">타학과 융합 과목 선택</span><span class="cs-tag">프로젝트 실습 포트폴리오</span>
+      </div>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="go('quiz',2)">✨ 내 적성 테스트 하러 가기</button></div>
+  </div></div>
+  <footer>당진정보고등학교 | 충청남도 당진시 | 2026학년도 신설학과 안내 자료</footer>
+</div>
+
+<!-- ══════════════ 적성테스트 ══════════════ -->
+<div id="quiz" class="section">
+  <div class="page"><div class="container">
+    <div class="quiz-shell">
+      <div class="page-label" style="text-align:center">Aptitude Test</div>
+      <h2 class="page-title" style="text-align:center;margin-bottom:10px">나에게 맞는 학과는?</h2>
+      <p style="color:var(--sub);font-size:15px;margin-bottom:44px;text-align:center">5가지 질문으로 알아보는 나의 적성</p>
+      <div class="prog-track"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+      <div id="q-area">
+        <div class="q-counter" id="q-cnt">Q 1 / 5</div>
+        <div class="q-text" id="q-txt"></div>
+        <div class="q-opts" id="q-opts"></div>
+      </div>
+      <div id="res-area" style="display:none"></div>
+    </div>
+  </div></div>
+  <footer>당진정보고등학교 | 충청남도 당진시 | 2026학년도 신설학과 안내 자료</footer>
+</div>
+
+<!-- ══════════════ 교육과정 ══════════════ -->
+<div id="curriculum" class="section">
+  <div class="page"><div class="container">
+    <div class="page-header">
+      <div class="page-label">3-Year Curriculum</div>
+      <h2 class="page-title">3년의 여정, 무엇을 배울까?</h2>
+      <p class="page-sub">학년별로 무엇을 배우는지 미리 살펴봐요.</p>
+    </div>
+    <div class="tab-row">
+      <button class="tab-b on-acc" onclick="switchTab('acc',this)">📒 회계사무과</button>
+      <button class="tab-b"        onclick="switchTab('biz',this)">💼 AI융합경영과</button>
+      <button class="tab-b"        onclick="switchTab('cont',this)">🎨 AI콘텐츠과</button>
+    </div>
+
+    <!-- 회계사무과 -->
+    <div id="tab-acc" class="tab-panel on">
+      <div class="yr-grid">
+        <div class="yr-card" style="background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.27)">
+          <div class="yr-ghost">1</div><div class="yr-lbl">1학년</div>
+          <div class="yr-tit">🌱 경영·회계 기초 완성</div>
+          <ul class="yr-list">
+            <li class="yr-li hi" style="color:var(--red-light)">성공적인 직업생활 (진로탐색)</li>
+            <li class="yr-li">회계원리</li><li class="yr-li">상업경제</li><li class="yr-li">사무관리</li>
+          </ul>
+          <div class="yr-note">💡 3개 학과 모두 동일한 기초 과목으로 시작해요</div>
+        </div>
+        <div class="yr-card" style="background:var(--surface);border:1px solid var(--border)">
+          <div class="yr-ghost">2</div><div class="yr-lbl">2학년</div>
+          <div class="yr-tit">📊 회계·경영 실무 집중</div>
+          <ul class="yr-list">
+            <li class="yr-li">회계정보처리시스템</li><li class="yr-li">기업자원통합관리</li><li class="yr-li">금융일반</li>
+            <li class="yr-li">기업과경영 · 비즈니스커뮤니케이션</li>
+            <li class="yr-li hi" style="color:var(--red-light)">회계실무 · 사무행정 · 총무</li>
+            <li class="yr-li hi" style="color:var(--red-light)">비서 · 인사</li>
+          </ul>
+          <div class="yr-note">💡 회계·경영 실무 과목을 집중적으로 배우는 시기</div>
+        </div>
+        <div class="yr-card" style="background:var(--surface);border:1px solid var(--border)">
+          <div class="yr-ghost">3</div><div class="yr-lbl">3학년</div>
+          <div class="yr-tit">🔀 코스별 전공 심화</div>
+          <ul class="yr-list">
+            <li class="yr-li hi" style="color:var(--red-light)">[회계사무원] 세무일반</li>
+            <li class="yr-li hi" style="color:var(--red-light)">[회계사무원] 세무실무</li>
+            <li class="yr-li hi" style="color:var(--red-light)">[회계사무원] 예산·자금</li>
+            <li class="yr-li hi" style="color:var(--red-light)">[경영지원] 노무관리</li>
+            <li class="yr-li hi" style="color:var(--red-light)">[경영지원] 전자상거래일반</li>
+            <li class="yr-li hi" style="color:var(--red-light)">[경영지원] 마케팅과광고 · 창업일반</li>
+            <li class="yr-li">타학과 융합 과목 택1</li>
+          </ul>
+          <div class="yr-note">💡 두 코스 중 하나를 선택해 취업·진학 역량을 쌓아요</div>
+        </div>
+      </div>
+      <div class="course-pair">
+        <div class="course-box" style="background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.2)">
+          <div class="co-title">📒 회계사무원 코스</div>
+          <div class="co-desc">세금 신고, 재무제표, 예산·자금 관리 전문가</div>
+          <div class="chips">
+            <span class="chip" style="background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);color:var(--red-light)">세무사무원</span>
+            <span class="chip" style="background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);color:var(--red-light)">회계사무원</span>
+            <span class="chip" style="background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);color:var(--red-light)">세무·회계법인 취업</span>
+          </div>
+        </div>
+        <div class="course-box" style="background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.2)">
+          <div class="co-title">🗂️ 경영지원사무원 코스</div>
+          <div class="co-desc">노무, 전자상거래, 마케팅, 창업 분야 경영 전반 전문가</div>
+          <div class="chips">
+            <span class="chip" style="background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);color:var(--red-light)">경영지원사무원</span>
+            <span class="chip" style="background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);color:var(--red-light)">인사·총무 담당</span>
+            <span class="chip" style="background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);color:var(--red-light)">스타트업 경영지원</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI융합경영과 -->
+    <div id="tab-biz" class="tab-panel">
+      <div class="yr-grid">
+        <div class="yr-card" style="background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.27)">
+          <div class="yr-ghost">1</div><div class="yr-lbl">1학년</div>
+          <div class="yr-tit">🌱 경영·회계 기초 완성</div>
+          <ul class="yr-list">
+            <li class="yr-li hi" style="color:var(--blue-light)">성공적인 직업생활 (진로탐색)</li>
+            <li class="yr-li">회계원리</li><li class="yr-li">상업경제</li><li class="yr-li">사무관리</li>
+          </ul>
+          <div class="yr-note">💡 경영이란 무엇인지, AI가 왜 필요한지 이해하는 시기</div>
+        </div>
+        <div class="yr-card" style="background:var(--surface);border:1px solid var(--border)">
+          <div class="yr-ghost">2</div><div class="yr-lbl">2학년</div>
+          <div class="yr-tit">🔥 AI·데이터 역량 집중</div>
+          <ul class="yr-list">
+            <li class="yr-li hi" style="color:var(--blue-light)">컴퓨터 시스템 일반</li>
+            <li class="yr-li hi" style="color:var(--blue-light)">인공지능 일반</li>
+            <li class="yr-li hi" style="color:var(--blue-light)">프로그래밍(파이썬)</li>
+            <li class="yr-li">회계정보처리시스템</li><li class="yr-li">금융일반</li>
+          </ul>
+          <div class="yr-note">💡 파이썬 코딩과 AI 개념을 본격적으로 학습</div>
+        </div>
+        <div class="yr-card" style="background:var(--surface);border:1px solid var(--border)">
+          <div class="yr-ghost">3</div><div class="yr-lbl">3학년</div>
+          <div class="yr-tit">🚀 실무 집중 &amp; 프로젝트</div>
+          <ul class="yr-list">
+            <li class="yr-li hi" style="color:var(--blue-light)">빅데이터 분석</li>
+            <li class="yr-li hi" style="color:var(--blue-light)">빅데이터 시각화</li>
+            <li class="yr-li">회계실무 · 총무 · 고객관리</li>
+            <li class="yr-li">사무행정</li>
+            <li class="yr-li">마케팅과광고 · 비즈니스커뮤니케이션 · 창업일반</li>
+            <li class="yr-li hi" style="color:var(--blue-light)">프로젝트 실습 (포트폴리오)</li>
+            <li class="yr-li">타학과 융합 과목 택1</li>
+          </ul>
+          <div class="yr-note">💡 실제 데이터로 분석 보고서·포트폴리오 완성</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI콘텐츠과 -->
+    <div id="tab-cont" class="tab-panel">
+      <div class="yr-grid">
+        <div class="yr-card" style="background:rgba(202,138,4,.08);border:1px solid rgba(202,138,4,.27)">
+          <div class="yr-ghost">1</div><div class="yr-lbl">1학년</div>
+          <div class="yr-tit">🌱 경영·콘텐츠 기초</div>
+          <ul class="yr-list">
+            <li class="yr-li hi" style="color:var(--yellow-light)">성공적인 직업생활 (진로탐색)</li>
+            <li class="yr-li">회계원리</li><li class="yr-li">상업경제</li><li class="yr-li">사무관리</li>
+          </ul>
+          <div class="yr-note">💡 1학년은 AI융합경영과와 동일한 기초 과목으로 시작해요</div>
+        </div>
+        <div class="yr-card" style="background:var(--surface);border:1px solid var(--border)">
+          <div class="yr-ghost">2</div><div class="yr-lbl">2학년</div>
+          <div class="yr-tit">🎨 콘텐츠 심화 + 코스 분기</div>
+          <ul class="yr-list">
+            <li class="yr-li">컴퓨터 그래픽</li><li class="yr-li">문화콘텐츠산업일반</li>
+            <li class="yr-li">마케팅과 광고</li><li class="yr-li">전자상거래 일반</li>
+            <li class="yr-li">창업일반 · 기업과경영 · 비즈니스커뮤니케이션</li>
+            <li class="yr-li hi" style="color:var(--yellow-light)">[챗크리에이터] 미디어콘텐츠일반 · 영상제작기초</li>
+            <li class="yr-li hi" style="color:var(--yellow-light)">[AI디자이너] 디자인일반 · 편집디자인</li>
+          </ul>
+          <div class="yr-note">💡 공통 과목을 배우면서 코스별 전공 과목도 함께 학습</div>
+        </div>
+        <div class="yr-card" style="background:var(--surface);border:1px solid var(--border)">
+          <div class="yr-ghost">3</div><div class="yr-lbl">3학년</div>
+          <div class="yr-tit">🚀 AI 콘텐츠 실전 제작</div>
+          <ul class="yr-list">
+            <li class="yr-li hi" style="color:var(--yellow-light)">광고콘텐츠제작 (공통)</li>
+            <li class="yr-li hi" style="color:var(--yellow-light)">캐릭터 제작 (공통)</li>
+            <li class="yr-li">사무행정 (공통)</li>
+            <li class="yr-li hi" style="color:var(--yellow-light)">프롬프트 디자인 (AI 활용, 공통)</li>
+            <li class="yr-li hi" style="color:var(--yellow-light)">[챗크리에이터] 프로젝트실습 (AI콘텐츠 기획)</li>
+            <li class="yr-li hi" style="color:var(--yellow-light)">[AI디자이너] 프로젝트실습 (AI콘텐츠 제작)</li>
+            <li class="yr-li">타학과 융합 과목 택1</li>
+          </ul>
+          <div class="yr-note">💡 AI 도구로 실제 광고·콘텐츠를 기획·제작하는 실전 과정</div>
+        </div>
+      </div>
+      <!-- AI콘텐츠과 코스 안내 박스 -->
+      <div class="course-pair">
+        <div class="course-box" style="background:rgba(202,138,4,.07);border:1px solid rgba(202,138,4,.2)">
+          <div class="co-title">💬 챗크리에이터 코스</div>
+          <div class="co-desc">SNS·유튜브 콘텐츠 기획부터 AI 글쓰기·영상 제작까지, 디지털 콘텐츠 크리에이터 전문가 양성</div>
+          <div class="chips">
+            <span class="chip" style="background:rgba(202,138,4,.15);border:1px solid rgba(202,138,4,.3);color:var(--yellow-light)">콘텐츠 크리에이터</span>
+            <span class="chip" style="background:rgba(202,138,4,.15);border:1px solid rgba(202,138,4,.3);color:var(--yellow-light)">SNS 마케터</span>
+            <span class="chip" style="background:rgba(202,138,4,.15);border:1px solid rgba(202,138,4,.3);color:var(--yellow-light)">영상 기획·편집</span>
+          </div>
+        </div>
+        <div class="course-box" style="background:rgba(202,138,4,.07);border:1px solid rgba(202,138,4,.2)">
+          <div class="co-title">🖼️ AI디자이너 코스</div>
+          <div class="co-desc">Photoshop·Illustrator·AI 이미지 도구를 활용한 광고 디자인·캐릭터 IP 제작 전문가 양성</div>
+          <div class="chips">
+            <span class="chip" style="background:rgba(202,138,4,.15);border:1px solid rgba(202,138,4,.3);color:var(--yellow-light)">AI 디자이너</span>
+            <span class="chip" style="background:rgba(202,138,4,.15);border:1px solid rgba(202,138,4,.3);color:var(--yellow-light)">광고·홍보 전문가</span>
+            <span class="chip" style="background:rgba(202,138,4,.15);border:1px solid rgba(202,138,4,.3);color:var(--yellow-light)">캐릭터 IP 창작</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <footer>당진정보고등학교 | 충청남도 당진시 | 2026학년도 신설학과 안내 자료</footer>
+</div>
+
+<!-- ══════════════ 진로 ══════════════ -->
+<div id="career" class="section">
+  <div class="page"><div class="container">
+    <div class="page-header">
+      <div class="page-label">Future Careers</div>
+      <h2 class="page-title">졸업 후, 어디서 일할 수 있을까?</h2>
+      <p class="page-sub">세 학과 모두 취업과 진학 두 가지 길이 열려 있어요.</p>
+    </div>
+    <div class="career-grid">
+      <!-- 회계사무과 -->
+      <div class="career-col">
+        <div class="car-head"><div class="car-dot" style="background:var(--red);box-shadow:0 0 8px var(--red)"></div><div class="car-name">📒 회계사무과</div></div>
+        <div class="car-list">
+          <div class="car-item"><div class="car-icon">🧾</div><div><div class="car-n">세무·회계 사무원</div><div class="car-d">세금 신고, 재무제표 작성 등 회계·세무 전문 직종</div></div></div>
+          <div class="car-item"><div class="car-icon">🗂️</div><div><div class="car-n">경영지원사무원</div><div class="car-d">인사·총무·노무·전자상거래 등 경영 전반 지원</div></div></div>
+          <div class="car-item"><div class="car-icon">🏦</div><div><div class="car-n">금융·보험 사무원</div><div class="car-d">금융일반, 기업자원통합관리 역량 활용</div></div></div>
+          <div class="car-item"><div class="car-icon">🎓</div><div><div class="car-n">대학 진학</div><div class="car-d">회계학과, 세무학과, 경영학과, 경영정보학과 등</div></div></div>
+        </div>
+      </div>
+      <!-- AI융합경영과 -->
+      <div class="career-col">
+        <div class="car-head"><div class="car-dot" style="background:var(--blue);box-shadow:0 0 8px var(--blue)"></div><div class="car-name">💼 AI융합경영과</div></div>
+        <div class="car-list">
+          <div class="car-item"><div class="car-icon">📈</div><div><div class="car-n">경영기획사무원</div><div class="car-d">기업 데이터를 분석해 전략을 세우는 핵심 직무</div></div></div>
+          <div class="car-item"><div class="car-icon">💰</div><div><div class="car-n">회계·세무 사무원</div><div class="car-d">회계실무, 세무처리 전문 직종</div></div></div>
+          <div class="car-item"><div class="car-icon">🤖</div><div><div class="car-n">데이터 분석가(BI)</div><div class="car-d">Power BI·파이썬으로 데이터 시각화</div></div></div>
+          <div class="car-item"><div class="car-icon">🎓</div><div><div class="car-n">대학 진학</div><div class="car-d">경영정보학과, 빅데이터학과, 경영학과 등</div></div></div>
+        </div>
+      </div>
+      <!-- AI콘텐츠과 -->
+      <div class="career-col">
+        <div class="car-head"><div class="car-dot" style="background:var(--yellow);box-shadow:0 0 8px var(--yellow)"></div><div class="car-name">🎨 AI콘텐츠과</div></div>
+        <div class="car-list">
+          <div class="car-item"><div class="car-icon">📣</div><div><div class="car-n">광고·홍보·마케터</div><div class="car-d">기업 브랜드를 알리는 SNS·디지털 마케팅 전문가</div></div></div>
+          <div class="car-item"><div class="car-icon">🎥</div><div><div class="car-n">콘텐츠 크리에이터</div><div class="car-d">유튜브·인스타그램 기획·편집 전문 직종</div></div></div>
+          <div class="car-item"><div class="car-icon">🖼️</div><div><div class="car-n">AI 디자이너</div><div class="car-d">Midjourney, Firefly 등 AI 도구로 디자인 제작</div></div></div>
+          <div class="car-item"><div class="car-icon">🎓</div><div><div class="car-n">대학 진학</div><div class="car-d">시각디자인학과, 광고홍보학과, 콘텐츠학과 등</div></div></div>
+        </div>
+      </div>
+    </div>
+    <!-- 핵심 도구 -->
+    <div class="tools-grid">
+      <div class="tool-box" style="background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.2)">
+        <div class="tool-name">📒 회계사무과 핵심 도구</div>
+        <div class="chips">
+          <span class="chip" style="background:rgba(220,38,38,.14);border:1px solid rgba(220,38,38,.3);color:var(--red-light)">회계 소프트웨어(더존)</span>
+          <span class="chip" style="background:rgba(220,38,38,.14);border:1px solid rgba(220,38,38,.3);color:var(--red-light)">세무 프로그램(ERP)</span>
+          <span class="chip" style="background:rgba(220,38,38,.14);border:1px solid rgba(220,38,38,.3);color:var(--red-light)">Excel 고급</span>
+          <span class="chip" style="background:rgba(220,38,38,.14);border:1px solid rgba(220,38,38,.3);color:var(--red-light)">전자세금계산서</span>
+          <span class="chip" style="background:rgba(220,38,38,.14);border:1px solid rgba(220,38,38,.3);color:var(--red-light)">급여관리 시스템</span>
+          <span class="chip" style="background:rgba(220,38,38,.14);border:1px solid rgba(220,38,38,.3);color:var(--red-light)">문서작성(한글·Word)</span>
+          <span class="chip" style="background:rgba(220,38,38,.14);border:1px solid rgba(220,38,38,.3);color:var(--red-light)">전산회계·세무 자격증</span>
+        </div>
+      </div>
+      <div class="tool-box" style="background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2)">
+        <div class="tool-name">💼 AI융합경영과 핵심 도구</div>
+        <div class="chips">
+          <span class="chip" style="background:rgba(37,99,235,.14);border:1px solid rgba(37,99,235,.3);color:var(--blue-light)">Python</span>
+          <span class="chip" style="background:rgba(37,99,235,.14);border:1px solid rgba(37,99,235,.3);color:var(--blue-light)">ChatGPT API</span>
+          <span class="chip" style="background:rgba(37,99,235,.14);border:1px solid rgba(37,99,235,.3);color:var(--blue-light)">Power BI</span>
+          <span class="chip" style="background:rgba(37,99,235,.14);border:1px solid rgba(37,99,235,.3);color:var(--blue-light)">Excel 고급</span>
+          <span class="chip" style="background:rgba(37,99,235,.14);border:1px solid rgba(37,99,235,.3);color:var(--blue-light)">SQL 기초</span>
+          <span class="chip" style="background:rgba(37,99,235,.14);border:1px solid rgba(37,99,235,.3);color:var(--blue-light)">ERP 시스템</span>
+          <span class="chip" style="background:rgba(37,99,235,.14);border:1px solid rgba(37,99,235,.3);color:var(--blue-light)">데이터 시각화</span>
+          <span class="chip" style="background:rgba(37,99,235,.14);border:1px solid rgba(37,99,235,.3);color:var(--blue-light)">회계 소프트웨어</span>
+        </div>
+      </div>
+      <div class="tool-box" style="background:rgba(202,138,4,.07);border:1px solid rgba(202,138,4,.2)">
+        <div class="tool-name">🎨 AI콘텐츠과 핵심 도구</div>
+        <div class="chips">
+          <span class="chip" style="background:rgba(202,138,4,.14);border:1px solid rgba(202,138,4,.3);color:var(--yellow-light)">Photoshop</span>
+          <span class="chip" style="background:rgba(202,138,4,.14);border:1px solid rgba(202,138,4,.3);color:var(--yellow-light)">Illustrator</span>
+          <span class="chip" style="background:rgba(202,138,4,.14);border:1px solid rgba(202,138,4,.3);color:var(--yellow-light)">Premiere Pro</span>
+          <span class="chip" style="background:rgba(202,138,4,.14);border:1px solid rgba(202,138,4,.3);color:var(--yellow-light)">ChatGPT 프롬프팅</span>
+          <span class="chip" style="background:rgba(202,138,4,.14);border:1px solid rgba(202,138,4,.3);color:var(--yellow-light)">Midjourney</span>
+          <span class="chip" style="background:rgba(202,138,4,.14);border:1px solid rgba(202,138,4,.3);color:var(--yellow-light)">Canva Pro</span>
+          <span class="chip" style="background:rgba(202,138,4,.14);border:1px solid rgba(202,138,4,.3);color:var(--yellow-light)">신티크(아이맥)</span>
+          <span class="chip" style="background:rgba(202,138,4,.14);border:1px solid rgba(202,138,4,.3);color:var(--yellow-light)">캐릭터 IP 제작</span>
+        </div>
+      </div>
+    </div>
+    <div class="center" style="margin-top:60px">
+      <button class="btn-primary" onclick="freshQuiz()">✨ 적성 테스트 다시 해보기</button>
+    </div>
+  </div></div>
+  <footer>당진정보고등학교 | 충청남도 당진시 | 2026학년도 신설학과 안내 자료</footer>
+</div>
+
+<!-- ══════════════ JAVASCRIPT ══════════════ -->
+<script>
+/* ── 섹션 이동 ── */
+function go(id, idx) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.drawer-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-btn')[idx]?.classList.add('active');
+  document.querySelectorAll('.drawer-btn')[idx]?.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── 모바일 메뉴 ── */
+function toggleMenu() {
+  const ham = document.getElementById('ham');
+  const drawer = document.getElementById('drawer');
+  ham.classList.toggle('open');
+  drawer.classList.toggle('open');
+}
+function closeMenu() {
+  document.getElementById('ham').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+}
+
+/* ── 교육과정 탭 ── */
+function switchTab(key, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab-b').forEach(b => b.classList.remove('on-acc','on-biz','on-cont'));
+  document.getElementById('tab-' + key).classList.add('on');
+  btn.classList.add('on-' + key);
+}
+
+/* ── 퀴즈 ── */
+/* A = AI융합경영과 / B = AI콘텐츠과 / C = 회계사무과 */
+const QS = [
+  { q:"방과 후 시간이 생겼다.\n나는 주로 무엇을 하고 싶을까?",
+    opts:[
+      {i:"🧮", t:"데이터·숫자로 패턴을 찾는 게 재밌다",      v:"A"},
+      {i:"🎬", t:"사진 찍고 영상 편집하는 게 너무 재밌다",    v:"B"},
+      {i:"📒", t:"가계부나 용돈 기록 정리하는 게 뿌듯하다",   v:"C"},
+      {i:"✏️", t:"그림 그리거나 디자인하는 게 즐겁다",        v:"B"}
+    ]},
+  { q:"조별 프로젝트에서\n내가 맡고 싶은 역할은?",
+    opts:[
+      {i:"💻", t:"데이터 분석하고 인사이트 보고서 쓰기",       v:"A"},
+      {i:"🎨", t:"발표 자료를 감각 있게 디자인하기",           v:"B"},
+      {i:"💰", t:"예산·수입·지출을 꼼꼼하게 관리하기",        v:"C"},
+      {i:"📸", t:"발표용 사진·영상 촬영 및 편집",              v:"B"}
+    ]},
+  { q:"AI를 배운다면\n어떻게 활용하고 싶어?",
+    opts:[
+      {i:"🤖", t:"AI로 경영 데이터 분석·전략 보고서 만들기",   v:"A"},
+      {i:"🖼️", t:"AI로 광고 이미지·영상 콘텐츠 제작하기",     v:"B"},
+      {i:"🧾", t:"AI로 세금 계산·회계 자동화 처리하기",        v:"C"},
+      {i:"💬", t:"챗GPT로 기획안·카피라이팅 작성하기",         v:"B"}
+    ]},
+  { q:"미래에 일하고 싶은\n곳은 어디에 가깝나?",
+    opts:[
+      {i:"🏢", t:"기업 본사 — 데이터·경영 전략 담당",          v:"A"},
+      {i:"🎪", t:"광고대행사나 크리에이티브 스튜디오",         v:"B"},
+      {i:"🏦", t:"세무·회계 사무소 또는 금융 기관",            v:"C"},
+      {i:"📱", t:"SNS·유튜브·게임 콘텐츠 회사",               v:"B"}
+    ]},
+  { q:"친구들이 나를 보통\n이렇게 부른다:",
+    opts:[
+      {i:"🧠", t:'"얘는 분석이랑 논리가 진짜 강해"',           v:"A"},
+      {i:"🌟", t:'"감각이 남달라, 뭔가 만들면 예뻐"',          v:"B"},
+      {i:"📐", t:'"꼼꼼하고 정확해, 믿고 맡길 수 있어"',       v:"C"},
+      {i:"🎭", t:'"표현력 최고, 아이디어가 넘쳐"',             v:"B"}
+    ]}
+];
+let step=0, sA=0, sB=0, sC=0;
+
+function renderQ() {
+  const q = QS[step];
+  document.getElementById('q-cnt').textContent = `Q ${step+1} / ${QS.length}`;
+  document.getElementById('q-txt').textContent  = q.q;
+  document.getElementById('prog').style.width   = (step / QS.length * 100) + '%';
+  const box = document.getElementById('q-opts');
+  box.innerHTML = '';
+  q.opts.forEach(o => {
+    const b = document.createElement('button');
+    b.className = 'q-opt';
+    b.innerHTML = `<div class="q-opt-icon">${o.i}</div><div class="q-opt-text">${o.t}</div>`;
+    b.onclick = () => answer(o.v);
+    box.appendChild(b);
+  });
+}
+
+function answer(v) {
+  if (v === 'A') sA++;
+  else if (v === 'B') sB++;
+  else sC++;
+  if (++step >= QS.length) showResult();
+  else renderQ();
+}
+
+function showResult() {
+  document.getElementById('prog').style.width = '100%';
+  document.getElementById('q-area').style.display = 'none';
+
+  /* 가장 높은 점수 학과 결정 (동점 시 A > C > B 우선) */
+  let winner = 'A';
+  if (sB > sA && sB > sC) winner = 'B';
+  else if (sC > sA) winner = 'C';
+
+  const ra = document.getElementById('res-area');
+  ra.style.display = 'block';
+
+  const RESULTS = {
+    A: {
+      box:   'background:linear-gradient(145deg,var(--blue-dark),var(--blue));box-shadow:0 36px 90px rgba(37,99,235,.48)',
+      emoji: '💼',
+      name:  'AI융합경영과',
+      desc:  '데이터를 논리적으로 분석하고 숫자로 문제를 해결하는 걸 좋아하는 당신! AI와 경영·금융 지식을 결합해 기업의 핵심 인재로 성장할 AI융합경영과가 잘 어울려요.',
+      jobs:  ['경영기획사무원','데이터 분석가','회계·세무사무원','BI 엔지니어'],
+      tab:   'biz',
+      btn:   'AI융합경영과 교육과정 보기 →'
+    },
+    B: {
+      box:   'background:linear-gradient(145deg,var(--yellow-dark),var(--yellow));box-shadow:0 36px 90px rgba(202,138,4,.48)',
+      emoji: '🎨',
+      name:  'AI콘텐츠과',
+      desc:  '감각적이고 창의적인 것을 좋아하는 당신! AI 기술로 광고, 영상, 디자인 콘텐츠를 만드는 AI콘텐츠과가 딱이에요. 챗크리에이터 또는 AI디자이너 코스 중 선택할 수 있어요!',
+      jobs:  ['광고·홍보 전문가','AI 디자이너','콘텐츠 크리에이터','소셜미디어 마케터'],
+      tab:   'cont',
+      btn:   'AI콘텐츠과 교육과정 보기 →'
+    },
+    C: {
+      box:   'background:linear-gradient(145deg,var(--red-dark),var(--red));box-shadow:0 36px 90px rgba(220,38,38,.48)',
+      emoji: '📒',
+      name:  '회계사무과',
+      desc:  '꼼꼼하고 정확한 것을 좋아하는 당신! 회계·세무·경영지원 실무를 탄탄하게 배우는 회계사무과가 잘 어울려요. 숫자와 문서로 기업을 든든하게 지원하는 전문가로 성장해요.',
+      jobs:  ['세무·회계 사무원','경영지원사무원','금융·보험 사무원','ERP 전문가'],
+      tab:   'acc',
+      btn:   '회계사무과 교육과정 보기 →'
+    }
+  };
+
+  const r = RESULTS[winner];
+  ra.innerHTML = `
+    <div class="result-box" style="${r.box}">
+      <div class="res-emoji">${r.emoji}</div>
+      <div class="res-kicker">당신에게 어울리는 학과</div>
+      <div class="res-name">${r.name}</div>
+      <div class="res-desc">${r.desc}</div>
+      <div class="res-jobs">${r.jobs.map(j=>`<span class="res-job">${j}</span>`).join('')}</div>
+      <div class="res-acts">
+        <button class="btn-out" onclick="freshQuiz()">🔄 다시 하기</button>
+        <button class="btn-fill" onclick="goTab('${r.tab}')">${r.btn}</button>
+      </div>
+    </div>`;
+}  /* showResult 끝 */
+
+/* 교육과정 탭 직접 열기 */
+function goTab(key) {
+  go('curriculum', 3);
+  // 탭 전환은 DOM이 visible 된 뒤 실행
+  setTimeout(() => {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));
+    document.querySelectorAll('.tab-b').forEach(b => b.classList.remove('on-acc','on-biz','on-cont'));
+    document.getElementById('tab-' + key).classList.add('on');
+    document.querySelector(`.tab-b:nth-child(${key==='acc'?1:key==='biz'?2:3})`).classList.add('on-' + key);
+  }, 50);
+}
+
+/* ── 상담 팝업 ── */
+function openConsult() {
+  document.getElementById('consult-popup').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeConsult() {
+  document.getElementById('consult-popup').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeConsultOutside(e) {
+  if (e.target === document.getElementById('consult-popup')) closeConsult();
+}
+
+/* ★ Apps Script 웹앱 배포 후 아래 URL을 교체하세요 ★ */
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxMvmrQp4aCmpFSCQ2mvfuOOvlG1BBaT4q4sQmr-siJu1sg-5qz2Y1wuNveSu93R8o/exec';
+
+async function submitForm() {
+  const id     = document.getElementById('f-id').value.trim();
+  const name   = document.getElementById('f-name').value.trim();
+  const role   = document.getElementById('f-role').value;
+  const dept   = document.getElementById('f-dept').value;
+  const msg    = document.getElementById('f-msg').value.trim();
+  const result = document.getElementById('f-result');
+
+  if (!name || !role || !msg) {
+    result.textContent = '⚠️ 성명, 관계, 문의 내용은 필수입니다.';
+    result.className = 'submit-msg err';
+    result.style.display = 'block';
+    return;
+  }
+
+  const btn = document.getElementById('f-submit');
+  btn.disabled = true;
+  btn.textContent = '전송 중...';
+  result.style.display = 'none';
+
+  /* 시트 컬럼 순서: 접수시간(GAS처리) | 학번/소속 | 성명 | 관계 | 관심분야 | 문의내용 */
+  const payload = {
+    studentId: id   || '(미입력)',
+    name:      name,
+    relation:  role,
+    interest:  dept || '미선택',
+    message:   msg
+  };
+
+  try {
+    await fetch(SHEET_URL, {
+      method:  'POST',
+      mode:    'no-cors',          // GAS CORS 우회 — 응답은 opaque 이므로 성공으로 간주
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body:    JSON.stringify(payload)
+    });
+    result.textContent = '✅ 문의가 성공적으로 접수되었습니다! 담당 선생님이 확인 후 답변드릴게요.';
+    result.className = 'submit-msg';
+    document.getElementById('f-id').value   = '';
+    document.getElementById('f-name').value = '';
+    document.getElementById('f-msg').value  = '';
+    document.getElementById('f-role').value = '';
+    document.getElementById('f-dept').value = '';
+  } catch(e) {
+    result.textContent = '❌ 전송 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+    result.className = 'submit-msg err';
+  }
+  result.style.display = 'block';
+  btn.disabled = false;
+  btn.textContent = '✉️ 문의 제출하기';
+}
+
+function freshQuiz() {
+  step=0; sA=0; sB=0; sC=0;
+  document.getElementById('q-area').style.display  = 'block';
+  document.getElementById('res-area').style.display = 'none';
+  document.getElementById('prog').style.width = '0%';
+  renderQ();
+  go('quiz', 2);
+}
+
+renderQ();
+</script>
+</body>
+</html>
